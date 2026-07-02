@@ -18,3 +18,20 @@ df.drop_duplicates(inplace=True)
 # Separate input features and target
 X = df.drop("prognosis", axis=1)
 y = df["prognosis"]
+
+# Create Label Encoder object
+label_encoder = LabelEncoder()
+
+# Learn all disease classes
+label_encoder.fit(y)
+
+print("Classes Learned:")
+print(label_encoder.classes_)
+
+# Transform disease names into numbers
+y_encoded = label_encoder.transform(y)
+
+print("\nEncoded Labels (First 10):")
+print(y_encoded[:10])
+
+y_encoded = label_encoder.fit_transform(y)
