@@ -1,6 +1,8 @@
 import pandas as pd
 
+
 from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
 
@@ -66,3 +68,25 @@ def split_dataset(X, y):
     )
 
     return X_train, X_test, y_train, y_test
+
+def scale_features(X_train, X_test):
+    """
+    Scale numerical features using StandardScaler.
+
+    Parameters:
+        X_train : Training features
+        X_test : Testing features
+
+    Returns:
+        X_train_scaled
+        X_test_scaled
+        scaler
+    """
+
+    scaler = StandardScaler()
+
+    X_train_scaled = scaler.fit_transform(X_train)
+
+    X_test_scaled = scaler.transform(X_test)
+
+    return X_train_scaled, X_test_scaled, scaler

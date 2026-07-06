@@ -13,3 +13,16 @@ First Prediction            ✅
 Accuracy                    ✅
 Evaluation                  ✅
 Confusion Matrix            ✅
+
+
+                train.py
+                    │
+                    ▼
+             pipeline.py
+                    │
+ ┌──────────┬────────┴────────┬──────────┐
+ ▼          ▼                 ▼          ▼
+Load     Preprocess       Train      Evaluate
+Dataset      │              │            │
+             ▼              ▼            ▼
+         Scale Data     Save Model   Metrics
