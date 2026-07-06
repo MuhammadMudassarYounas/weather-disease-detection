@@ -11,4 +11,5 @@ Logistic Regression         ✅
 Model Training              ✅
 First Prediction            ✅
 Accuracy                    ✅
-
+Evaluation                  ✅
+Confusion Matrix            ✅

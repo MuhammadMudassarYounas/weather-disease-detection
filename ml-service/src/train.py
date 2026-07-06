@@ -1,11 +1,16 @@
+import joblib
 import pandas as pd
+import matplotlib.pyplot as plt
+
+
 from pathlib import Path
 
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
-    confusion_matrix
+    confusion_matrix,
+    ConfusionMatrixDisplay,
 )
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -56,6 +61,23 @@ accuracy = accuracy_score(y_test, y_pred)
 
 print(f"Model Accuracy: {accuracy:.2f}")
 
+
+# Save trained model
+MODEL_PATH = BASE_DIR / "models" / "disease_model.pkl"
+
+joblib.dump(model, MODEL_PATH)
+
+print(f"Model saved at: {MODEL_PATH}")
+
+# Save Label Encoder
+ENCODER_PATH = BASE_DIR / "models" / "label_encoder.pkl"
+
+joblib.dump(label_encoder, ENCODER_PATH)
+
+print(f"Encoder saved at: {ENCODER_PATH}")
+
+
+
 print("\nClassification Report")
 print("=" * 60)
 
@@ -66,3 +88,18 @@ print(
         target_names=label_encoder.classes_
     )
 )
+
+# Create confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+
+# Display confusion matrix
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=label_encoder.classes_
+)
+
+disp.plot(xticks_rotation=45)
+
+plt.title("Disease Prediction Confusion Matrix")
+
+plt.show()
