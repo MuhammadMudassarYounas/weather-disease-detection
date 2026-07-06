@@ -1,0 +1,7 @@
+{
+    "python.analysis.extraPaths": [
+        "./ml-service/test/test_",
+        "./ml-service/tests/test_",
+        "./ml-service/test/test_"
+    ]
+}

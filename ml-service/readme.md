@@ -26,3 +26,34 @@ Load     Preprocess       Train      Evaluate
 Dataset      │              │            │
              ▼              ▼            ▼
          Scale Data     Save Model   Metrics
+
+
+
+                             Browser
+                       │
+                       ▼
+              http://127.0.0.1:8000
+                       │
+                       ▼
+                   Uvicorn
+                       │
+                       ▼
+                  FastAPI App
+                    (main.py)
+                       │
+                       ▼
+              Prediction Router
+               (prediction.py)
+                       │
+                       ▼
+            Prediction Service
+         (prediction_service.py)
+                       │
+                       ▼
+             Model Loader
+          (model_loader.py)
+                       │
+          ┌────────────┼────────────┐
+          ▼            ▼            ▼
+      Logistic     Standard      Label
+      Regression    Scaler      Encoder
