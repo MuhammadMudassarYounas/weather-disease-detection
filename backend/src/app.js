@@ -1,36 +1,42 @@
 import express from "express";
+import cors from "cors";
 
 import { env } from "./config/env.js";
+import { connectDB } from "./config/database.js";
 
 import predictionRoutes from "./routes/prediction.routes.js";
+import weatherRoutes from "./routes/weather.routes.js";
+import historyRoutes from "./routes/history.routes.js";
 
+// Create Express app FIRST
 const app = express();
 
-/**
- * Parse incoming JSON requests.
- */
+// Middlewares
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
-/**
- * Health Check
- */
+// Connect Database
+await connectDB();
+
+// Routes
+app.use("/api/v1", predictionRoutes);
+app.use("/api/v1", weatherRoutes);
+app.use("/api/v1", historyRoutes);
+
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "Weather Disease Detection Backend is running.",
+    message: "Backend is running.",
   });
 });
 
-/**
- * Prediction Routes
- */
-app.use("/api/v1", predictionRoutes);
-
-/**
- * Start Server
- */
+// Start Server
 app.listen(env.PORT, () => {
-  console.log(
-    `Server running on http://localhost:${env.PORT}`
-  );
+  console.log(`Server running on http://localhost:${env.PORT}`);
 });
