@@ -8,4 +8,5 @@ export const env = {
   FASTAPI_URL: process.env.FASTAPI_URL,
   WEATHER_API_KEY: process.env.WEATHER_API_KEY,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+  JWT_SECRET: process.env.JWT_SECRET,
 };

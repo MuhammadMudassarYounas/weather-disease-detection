@@ -12,13 +12,10 @@ def predict(request):
     Predict disease from patient data.
     """
 
-    # Load trained components
     model = get_model()
     scaler = get_scaler()
     encoder = get_encoder()
 
-    # Create DataFrame with exactly the same columns
-    # that were used during training.
     input_data = pd.DataFrame([{
         "Age": request.age,
         "Gender": request.gender,
@@ -76,26 +73,48 @@ def predict(request):
     }])
 
     try:
-        print("\n========== INPUT DATA ==========")
-        print(input_data)
-        print("================================")
+
+        print("\n========== MODEL INPUT ==========")
+        print(input_data.T)
+        print("=================================\n")
 
         # Scale features
         input_scaled = scaler.transform(input_data)
 
-        # Predict disease
+        print("\n========== SCALED INPUT ==========")
+        print(input_scaled)
+        print("==================================\n")
+
+        # Predict
         prediction = model.predict(input_scaled)
+
+        # Prediction probabilities
+        if hasattr(model, "predict_proba"):
+
+            probabilities = model.predict_proba(input_scaled)[0]
+
+            classes = encoder.inverse_transform(
+                list(range(len(probabilities)))
+            )
+
+            print("\n========== PROBABILITIES ==========")
+
+            for disease_name, probability in zip(classes, probabilities):
+                print(f"{disease_name}: {probability:.4f}")
+
+            print("===================================\n")
 
         # Decode prediction
         disease = encoder.inverse_transform(prediction)
 
-        print("\n========== PREDICTION ==========")
+        print("\n========== FINAL PREDICTION ==========")
         print(disease[0])
-        print("================================")
+        print("======================================")
 
         return disease[0]
 
     except Exception as e:
+
         print("\n========== PREDICTION ERROR ==========")
         print(type(e).__name__)
         print(str(e))

@@ -1,20 +1,61 @@
-import Prediction from "../models/prediction.model.js";
+import PredictionHistory from "../models/predictionHistory.model.js";
 
 /**
- * Save prediction history to MongoDB.
+ * Save prediction history.
  */
 export const savePrediction = async ({
+  user,
   city,
   weather,
-  symptoms,
-  predicted_disease,
+  patient,
+  prediction,
+  ai_report,
 }) => {
-  const prediction = await Prediction.create({
+
+  const history = await PredictionHistory.create({
+    user,
     city,
     weather,
-    symptoms,
-    predicted_disease,
+    patient,
+    prediction,
+    ai_report,
   });
 
-  return prediction;
+  return history;
+
+};
+
+
+/**
+ * Get all prediction history.
+ */
+/**
+ * Get logged-in user's prediction history
+ */
+export const getPredictionHistory = async (userId) => {
+
+  const history = await PredictionHistory.find({
+    user: userId,
+  }).sort({
+    createdAt: -1,
+  });
+
+  return history;
+
+};
+
+
+/**
+ * Delete logged-in user's prediction
+ */
+export const deletePrediction = async (
+  id,
+  userId
+) => {
+
+  return await PredictionHistory.findOneAndDelete({
+    _id: id,
+    user: userId,
+  });
+
 };

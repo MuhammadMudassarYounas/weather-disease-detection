@@ -1,27 +1,68 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "../pages/Home";
 import Prediction from "../pages/Prediction";
 import History from "../pages/History";
+import Dashboard from "../pages/Dashboard";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
 
-export default function AppRoutes(){
+import ProtectedRoute from "../components/auth/ProtectedRoute";
 
-    return(
+export default function AppRoutes() {
 
-        <BrowserRouter>
+  return (
 
-            <Routes>
+    <Routes>
 
-                <Route path="/" element={<Home/>}/>
+      {/* Public Routes */}
 
-                <Route path="/prediction" element={<Prediction/>}/>
+      <Route
+        path="/"
+        element={<Home />}
+      />
 
-                <Route path="/history" element={<History/>}/>
+      <Route
+        path="/login"
+        element={<Login />}
+      />
 
-            </Routes>
+      <Route
+        path="/register"
+        element={<Register />}
+      />
 
-        </BrowserRouter>
+      {/* Protected Routes */}
 
-    );
+      <Route
+        path="/prediction"
+        element={
+          <ProtectedRoute>
+            <Prediction />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/history"
+        element={
+          <ProtectedRoute>
+            <History />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+    </Routes>
+
+  );
 
 }

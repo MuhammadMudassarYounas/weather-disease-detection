@@ -19,10 +19,7 @@ const symptoms = [
   "dizziness",
   "abdominal_pain",
   "high_fever",
-
-  // ADD THIS
   "severe_headache",
-
   "weakness",
   "chest_pain",
   "diarrhea",
@@ -59,7 +56,6 @@ const symptoms = [
 export default function PredictionForm() {
 
   const [loading, setLoading] = useState(false);
-
   const [result, setResult] = useState(null);
 
   const initialData = {
@@ -106,6 +102,12 @@ export default function PredictionForm() {
 
       const response = await predictDisease(formData);
 
+      console.log("========== API RESPONSE ==========");
+      console.log(response);
+
+      console.log("========== AI REPORT ==========");
+      console.log(response.ai_report);
+
       setResult(response);
 
     } catch (error) {
@@ -130,9 +132,7 @@ export default function PredictionForm() {
       >
 
         <h2 className="text-3xl font-bold mb-8 text-center">
-
           Disease Prediction
-
         </h2>
 
         <div className="grid md:grid-cols-2 gap-4">
@@ -197,9 +197,7 @@ export default function PredictionForm() {
         </div>
 
         <h3 className="text-2xl font-bold mt-8 mb-5">
-
           Symptoms
-
         </h3>
 
         <div className="grid md:grid-cols-3 gap-3">
@@ -219,9 +217,7 @@ export default function PredictionForm() {
               />
 
               <span className="capitalize">
-
                 {symptom.replaceAll("_", " ")}
-
               </span>
 
             </label>
@@ -239,7 +235,9 @@ export default function PredictionForm() {
         </button>
 
       </form>
-            {result && (
+
+      {result && (
+
         <div className="space-y-8 mt-10">
 
           <WeatherCard
@@ -251,10 +249,11 @@ export default function PredictionForm() {
           />
 
           <AIReport
-            report={result.ai_analysis}
+            report={result.ai_report}
           />
 
         </div>
+
       )}
 
     </>
