@@ -6,8 +6,9 @@ import History from "../pages/History";
 import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-
 import ProtectedRoute from "../components/auth/ProtectedRoute";
+import Profile from "../pages/Profile";
+
 
 export default function AppRoutes() {
 
@@ -57,6 +58,14 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         }
       />

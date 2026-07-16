@@ -1,172 +1,277 @@
 import { useEffect, useState } from "react";
-import { getHistory } from "../services/historyApi";
-import DiseaseChart from "../components/dashboard/DiseaseChart";
-import MonthlyChart from "../components/dashboard/MonthlyChart";
-import TemperatureChart from "../components/dashboard/TemperatureChart";
+
+import { getDashboard } from "../services/dashboardApi";
+import DiseasePieChart from "../components/dashboard/DiseasePieChart";
+import WeatherAnalytics from "../components/dashboard/WeatherAnalytics";
 
 export default function Dashboard() {
 
-    const [history, setHistory] = useState([]);
+  const [dashboard, setDashboard] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        loadData();
-    }, []);
+  useEffect(() => {
+    loadDashboard();
+  }, []);
 
-    const loadData = async () => {
+  const loadDashboard = async () => {
 
-        try {
+    try {
 
-            const response = await getHistory();
+      const response = await getDashboard();
 
-            setHistory(response.history);
+      setDashboard(response.dashboard);
 
-        } catch (error) {
+    } catch (error) {
 
-            console.error(error);
+      console.error(error);
 
-        }
+    } finally {
 
-    };
+      setLoading(false);
 
-    const totalPredictions = history.length;
+    }
 
-    const averageTemperature =
-        history.length === 0
-            ? 0
-            : (
-                history.reduce(
-                    (sum, item) => sum + item.weather.temperature,
-                    0
-                ) / history.length
-            ).toFixed(1);
+  };
 
-    const diseaseCount = {};
-
-    history.forEach((item) => {
-
-        diseaseCount[item.prediction.disease] =
-            (diseaseCount[item.prediction.disease] || 0) + 1;
-
-    });
-
-    let mostCommonDisease = "N/A";
-
-    let highest = 0;
-
-    Object.entries(diseaseCount).forEach(([disease, count]) => {
-
-        if (count > highest) {
-
-            highest = count;
-
-            mostCommonDisease = disease;
-
-        }
-
-    });
+  if (loading) {
 
     return (
 
-        <div className="max-w-7xl mx-auto p-8">
+      <div className="text-center mt-20 text-2xl">
 
-            <h1 className="text-4xl font-bold mb-10">
+        Loading Dashboard...
 
-                Dashboard
+      </div>
 
-            </h1>
+    );
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+  }
 
-                <div className="bg-white rounded-xl shadow-lg p-6">
+  if (!dashboard) {
 
-                    <h2 className="text-gray-500">
+    return (
 
-                        Total Predictions
+      <div className="text-center mt-20">
 
-                    </h2>
+        <h2 className="text-3xl font-bold">
 
-                    <p className="text-4xl font-bold mt-3">
+          Dashboard
 
-                        {totalPredictions}
+        </h2>
 
-                    </p>
+        <p className="mt-4 text-red-500">
 
-                </div>
+          Unable to load dashboard data.
 
-                <div className="bg-white rounded-xl shadow-lg p-6">
+        </p>
 
-                    <h2 className="text-gray-500">
+      </div>
 
-                        Average Temperature
+    );
 
-                    </h2>
+  }
 
-                    <p className="text-4xl font-bold mt-3">
+  return (
 
-                        {averageTemperature}°C
+    <div className="max-w-7xl mx-auto p-8">
 
-                    </p>
+      <h1 className="text-4xl font-bold mb-10">
 
-                </div>
+        Dashboard
 
-                <div className="bg-white rounded-xl shadow-lg p-6">
+      </h1>
 
-                    <h2 className="text-gray-500">
+      {/* Statistics Cards */}
 
-                        Most Common Disease
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                    </h2>
+        <div className="bg-white rounded-xl shadow p-6">
 
-                    <p className="text-2xl font-bold mt-3">
+          <p className="text-gray-500">
 
-                        {mostCommonDisease}
+            Total Predictions
 
-                    </p>
+          </p>
 
-                </div>
+          <h2 className="text-4xl font-bold mt-2 text-blue-600">
 
-                <div className="bg-white rounded-xl shadow-lg p-6">
+            {dashboard.totalPredictions}
 
-                    <h2 className="text-gray-500">
-
-                        Diseases Detected
-
-                    </h2>
-
-                    <p className="text-4xl font-bold mt-3">
-
-                        {Object.keys(diseaseCount).length}
-
-                    </p>
-
-                </div>
-
-            </div>
-            <div className="mt-10">
-
-                <DiseaseChart
-                    history={history}
-                />
-
-            </div>
-            <div className="mt-10">
-
-                <MonthlyChart
-                    history={history}
-                />
-
-            </div>
-            <div className="mt-10">
-
-                <TemperatureChart
-                    history={history}
-                />
-
-            </div>
+          </h2>
 
         </div>
 
+        <div className="bg-white rounded-xl shadow p-6">
 
-    );
+          <p className="text-gray-500">
+
+            Today's Predictions
+
+          </p>
+
+          <h2 className="text-4xl font-bold mt-2 text-green-600">
+
+            {dashboard.todayPredictions}
+
+          </h2>
+
+        </div>
+
+        <div className="bg-white rounded-xl shadow p-6">
+
+          <p className="text-gray-500">
+
+            Latest Disease
+
+          </p>
+
+          <h2 className="text-2xl font-bold mt-2 text-red-600">
+
+            {dashboard.latestPrediction?.prediction?.disease || "N/A"}
+
+          </h2>
+
+        </div>
+
+        <div className="bg-white rounded-xl shadow p-6">
+
+          <p className="text-gray-500">
+
+            Latest City
+
+          </p>
+
+          <h2 className="text-2xl font-bold mt-2 text-indigo-600">
+
+            {dashboard.latestPrediction?.city || "N/A"}
+
+          </h2>
+
+        </div>
+
+      </div>
+
+      {/* Weather Analytics */}
+
+      <div className="mt-10">
+
+        <h2 className="text-3xl font-bold mb-6">
+
+          Weather Analytics
+
+        </h2>
+
+        <WeatherAnalytics
+          analytics={dashboard.weatherAnalytics}
+        />
+
+      </div>
+
+      {/* Charts & Recent Predictions */}
+
+      <div className="grid lg:grid-cols-2 gap-8 mt-10">
+
+        {/* Disease Pie Chart */}
+
+        <DiseasePieChart
+          data={dashboard.diseaseStats}
+        />
+
+        {/* Recent Predictions */}
+
+        <div className="bg-white rounded-xl shadow p-6">
+
+          <h2 className="text-2xl font-bold mb-6">
+
+            Recent Predictions
+
+          </h2>
+
+          {
+
+            dashboard.recentPredictions.length === 0 ? (
+
+              <p>No Predictions Found</p>
+
+            ) : (
+
+              <table className="w-full">
+
+                <thead>
+
+                  <tr className="border-b">
+
+                    <th className="text-left py-3">
+
+                      Disease
+
+                    </th>
+
+                    <th className="text-left py-3">
+
+                      City
+
+                    </th>
+
+                    <th className="text-left py-3">
+
+                      Date
+
+                    </th>
+
+                  </tr>
+
+                </thead>
+
+                <tbody>
+
+                  {
+
+                    dashboard.recentPredictions.map((item) => (
+
+                      <tr
+                        key={item._id}
+                        className="border-b hover:bg-gray-50"
+                      >
+
+                        <td className="py-3">
+
+                          {item.prediction.disease}
+
+                        </td>
+
+                        <td>
+
+                          {item.city}
+
+                        </td>
+
+                        <td>
+
+                          {new Date(item.createdAt).toLocaleDateString()}
+
+                        </td>
+
+                      </tr>
+
+                    ))
+
+                  }
+
+                </tbody>
+
+              </table>
+
+            )
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  );
 
 }

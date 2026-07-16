@@ -17,11 +17,16 @@ router.post("/predict", protect, predictDisease);
 /**
  * Get Prediction History
  */
-router.get("/history", getHistory);
+router.get(
+  "/history",
+  protect,
+  getHistory
+);
 
-/**
- * Delete Prediction
- */
-router.delete("/history/:id", removeHistory);
+router.delete(
+  "/history/:id",
+  protect,
+  removeHistory
+);
 
 export default router;

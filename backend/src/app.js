@@ -8,6 +8,7 @@ import predictionRoutes from "./routes/prediction.routes.js";
 import weatherRoutes from "./routes/weather.routes.js";
 import historyRoutes from "./routes/history.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
 
 // Create Express app FIRST
 const app = express();
@@ -27,6 +28,7 @@ await connectDB();
 
 // Routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1", dashboardRoutes);
 app.use("/api/v1", predictionRoutes);
 app.use("/api/v1", weatherRoutes);
 app.use("/api/v1", historyRoutes);
