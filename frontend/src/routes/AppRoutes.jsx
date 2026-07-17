@@ -8,6 +8,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import Profile from "../pages/Profile";
+import NotFound from "../pages/NotFound";
 
 
 export default function AppRoutes() {
@@ -68,6 +69,10 @@ export default function AppRoutes() {
             <Profile />
           </ProtectedRoute>
         }
+      />
+      <Route
+        path="*"
+        element={<NotFound />}
       />
 
     </Routes>
